@@ -1,0 +1,23 @@
+server.port: 9090
+
+host:
+  database: localhost
+
+spring:
+  datasource:
+    druid:
+      username: root
+      password: 111111
+       
+super-admin:
+  username: admin
+  password: 111111
+  email: tt@test.com
+        
+session:
+  redis:
+    host: localhost
+    password: 
+    port: 6379
+    
+access.control.allow.origin: http://localhost:8080

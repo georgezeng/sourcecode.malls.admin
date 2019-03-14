@@ -1,0 +1,33 @@
+spring.application.name: malls-admin
+spring.session.redis.namespace: session:${spring.application.name}
+spring:
+  jpa:
+    open-in-view: false
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/main.xml
+  datasource:
+    druid:
+      filter:
+        stat:
+          db-type: mysql
+          log-slow-sql: true
+          slow-sql-millis: 5000
+      url: jdbc:mysql://${host.database}/malls?useUnicode=true&characterEncoding=utf8
+      max-active: 20
+      initial-size: 10
+      max-wait: 60000
+      min-idle: 10
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      test-on-borrow: true
+      test-while-idle: true
+      validation-query: SELECT 1
+       
+super-admin:
+  code: SUPER_ADMIN
+  authority: AUTH_SUPER_ADMIN
+
+session:
+  attributes:
+    userId: userId
