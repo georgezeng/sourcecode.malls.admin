@@ -16,6 +16,7 @@ import com.sourcecode.malls.admin.domain.Authority;
 import com.sourcecode.malls.admin.domain.Role;
 import com.sourcecode.malls.admin.domain.User;
 import com.sourcecode.malls.admin.dto.AuthorityDTO;
+import com.sourcecode.malls.admin.dto.RoleDTO;
 import com.sourcecode.malls.admin.dto.UserDTO;
 import com.sourcecode.malls.admin.dto.query.QueryInfo;
 import com.sourcecode.malls.admin.properties.SuperAdminProperties;
@@ -54,7 +55,7 @@ public class RoleService implements JpaService<Role, Long> {
 		authorityService.prepareSuperAdmin(role);
 	}
 
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Page<Role> findAll(QueryInfo<String> queryInfo) {
 		String nameOrCode = queryInfo.getData();
 		Page<Role> pageReulst = null;
@@ -86,14 +87,21 @@ public class RoleService implements JpaService<Role, Long> {
 				}
 			}
 		}
-		boolean isSuperAdmin = role.getAuthorities().stream().anyMatch(auth -> superAdminProperties.getAuthority().equals(auth.getCode()));
-		if (isSuperAdmin) {
+		if (isSuperAdmin(role)) {
 			AssertUtil.assertTrue(role.getUsers().size() == 1, "超级管理员不能没有用户");
 			boolean isSpecificUser = role.getUsers().stream().anyMatch(user -> superAdminProperties.getUsername().equals(user.getUsername()));
 			AssertUtil.assertTrue(isSpecificUser, "不能修改超级管理员的所属用户");
 		}
 		AssertUtil.assertTrue(!CollectionUtils.isEmpty(role.getAuthorities()), "请关联至少一条权限记录");
 		roleRepository.save(role);
+	}
+
+	public boolean isSuperAdmin(RoleDTO role) {
+		return isSuperAdmin(findById(role.getId()).get());
+	}
+
+	public boolean isSuperAdmin(Role role) {
+		return role.getAuthorities().stream().anyMatch(auth -> superAdminProperties.getAuthority().equals(auth.getCode()));
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class AuthorityService implements JpaService<Authority, Long> {
 		}
 	}
 
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Page<Authority> findAll(QueryInfo<String> queryInfo) {
 		String nameOrCode = queryInfo.getData();
 		Page<Authority> pageReulst = null;
@@ -47,6 +47,11 @@ public class AuthorityService implements JpaService<Authority, Long> {
 			pageReulst = authorityRepository.findAll(queryInfo.getPage().pageable());
 		}
 		return pageReulst;
+	}
+
+	@Transactional(readOnly = true)
+	public boolean isSuperAdmin(Authority authority) {
+		return authority.getCode().equals(superAdminProperties.getAuthority());
 	}
 
 	@Override

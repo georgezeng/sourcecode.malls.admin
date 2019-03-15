@@ -3,6 +3,7 @@ package com.sourcecode.malls.admin.domain;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,6 +46,13 @@ public class User extends BaseUser implements UserDetails {
 		this.roles = roles;
 	}
 
+	public void addRole(Role role) {
+		if (roles == null) {
+			roles = new HashSet<>();
+		}
+		roles.add(role);
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> set = new HashSet<>();
@@ -72,8 +80,17 @@ public class User extends BaseUser implements UserDetails {
 	}
 
 	public UserDTO asDTO() {
+		return asDTO(false);
+	}
+
+	public UserDTO asDTO(boolean withRoles) {
 		UserDTO dto = new UserDTO();
-		BeanUtils.copyProperties(this, dto, "roles");
+		BeanUtils.copyProperties(this, dto, "password", "roles");
+		if (withRoles) {
+			if (roles != null) {
+				dto.setRoles(roles.stream().map(role -> role.asDTO()).collect(Collectors.toList()));
+			}
+		}
 		return dto;
 	}
 }

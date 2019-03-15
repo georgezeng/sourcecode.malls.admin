@@ -1,5 +1,7 @@
 package com.sourcecode.malls.admin.service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,20 +15,28 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.alibaba.druid.util.StringUtils;
 import com.sourcecode.malls.admin.constants.EnvConstant;
+import com.sourcecode.malls.admin.domain.Role;
 import com.sourcecode.malls.admin.domain.User;
+import com.sourcecode.malls.admin.dto.RoleDTO;
 import com.sourcecode.malls.admin.dto.query.QueryInfo;
 import com.sourcecode.malls.admin.properties.SuperAdminProperties;
+import com.sourcecode.malls.admin.repository.jpa.impl.RoleRepository;
 import com.sourcecode.malls.admin.repository.jpa.impl.UserRepository;
 import com.sourcecode.malls.admin.service.base.JpaService;
+import com.sourcecode.malls.admin.util.AssertUtil;
 
 @Service
 @Transactional
 public class UserService implements UserDetailsService, JpaService<User, Long> {
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Autowired
 	private SuperAdminProperties superAdminProperties;
@@ -60,7 +70,7 @@ public class UserService implements UserDetailsService, JpaService<User, Long> {
 		roleService.prepareSuperAdmin(user);
 	}
 
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<User> userOp = userRepository.findByUsername(username);
@@ -71,7 +81,7 @@ public class UserService implements UserDetailsService, JpaService<User, Long> {
 		return userOp.get();
 	}
 
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Page<User> findAll(QueryInfo<String> queryInfo) {
 		String nameOrCode = queryInfo.getData();
 		Page<User> pageReulst = null;
@@ -84,9 +94,41 @@ public class UserService implements UserDetailsService, JpaService<User, Long> {
 		return pageReulst;
 	}
 
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public boolean isSuperAdmin(User user) {
-		return user.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals(superAdminProperties.getAuthority()));
+		return user.getUsername().equals(superAdminProperties.getUsername());
+	}
+
+	public void relateToRoles(User user, List<RoleDTO> roles) {
+
+		user.setRoles(new HashSet<>());
+		if (!CollectionUtils.isEmpty(roles)) {
+			for (RoleDTO roleDTO : roles) {
+				Optional<Role> roleOp = roleRepository.findById(roleDTO.getId());
+				if (roleOp.isPresent()) {
+					Role role = roleOp.get();
+					boolean found = false;
+					if (role.getUsers() != null) {
+						for (User data : role.getUsers()) {
+							if (data.getUsername().equals(user.getUsername())) {
+								found = true;
+								break;
+							}
+						}
+					}
+					if (!found) {
+						role.addUser(user);
+					}
+					user.addRole(role);
+				}
+			}
+		}
+		if (isSuperAdmin(user)) {
+			AssertUtil.assertTrue(user.getRoles().size() == 1, "超级管理员不需要添加其他角色");
+		}
+		AssertUtil.assertTrue(!CollectionUtils.isEmpty(user.getRoles()), "请关联至少一条角色记录");
+		roleRepository.saveAll(user.getRoles());
+		save(user);
 	}
 
 	@Override

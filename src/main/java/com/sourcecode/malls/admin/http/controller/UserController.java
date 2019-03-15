@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +20,7 @@ import com.sourcecode.malls.admin.dto.base.ResultBean;
 import com.sourcecode.malls.admin.dto.query.PageResult;
 import com.sourcecode.malls.admin.dto.query.QueryInfo;
 import com.sourcecode.malls.admin.http.session.UserContext;
+import com.sourcecode.malls.admin.service.RoleService;
 import com.sourcecode.malls.admin.service.UserService;
 import com.sourcecode.malls.admin.util.AssertUtil;
 
@@ -26,6 +29,10 @@ import com.sourcecode.malls.admin.util.AssertUtil;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private RoleService roleService;
+	@Autowired
+	private PasswordEncoder pwdEncoder;
 
 	@RequestMapping(value = "/current")
 	public ResultBean<UserDTO> currentUser() {
@@ -50,22 +57,25 @@ public class UserController {
 			Optional<User> dataOp = userService.findById(dto.getId());
 			AssertUtil.assertTrue(dataOp.isPresent(), "记录不存在");
 			data = dataOp.get();
-			BeanUtils.copyProperties(dto, data, "id", "username");
+			BeanUtils.copyProperties(dto, data, "id", "username", "password", "roles");
 		} else {
 			data = dto.asEntity();
+			data.setPassword(pwdEncoder.encode(data.getPassword()));
 		}
 		if (userService.isSuperAdmin(data)) {
 			AssertUtil.assertTrue(data.isEnabled(), "不能禁用超级管理员");
+		} else {
+			AssertUtil.assertTrue(!dto.getRoles().stream().anyMatch(role -> roleService.isSuperAdmin(role)), "不能设置超级管理员");
 		}
-		userService.save(data);
+		userService.relateToRoles(data, dto.getRoles());
 		return new ResultBean<>();
 	}
 
 	@RequestMapping(value = "/one/{id}")
-	public ResultBean<UserDTO> findOne(Long id) {
+	public ResultBean<UserDTO> findOne(@PathVariable Long id) {
 		Optional<User> dataOp = userService.findById(id);
 		AssertUtil.assertTrue(dataOp.isPresent(), "查找不到相应的记录");
-		return new ResultBean<>(dataOp.get().asDTO());
+		return new ResultBean<>(dataOp.get().asDTO(true));
 	}
 
 	@RequestMapping(value = "/delete")

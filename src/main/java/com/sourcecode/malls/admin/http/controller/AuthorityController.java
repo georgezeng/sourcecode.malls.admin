@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +46,7 @@ public class AuthorityController {
 			Optional<Authority> dataOp = authorityService.findById(dto.getId());
 			AssertUtil.assertTrue(dataOp.isPresent(), "记录不存在");
 			data = dataOp.get();
+			AssertUtil.assertTrue(!authorityService.isSuperAdmin(data), "不能修改超级管理员权限");
 			BeanUtils.copyProperties(dto, data, "id");
 		} else {
 			data = dto.asEntity();
@@ -54,7 +56,7 @@ public class AuthorityController {
 	}
 
 	@RequestMapping(value = "/one/{id}")
-	public ResultBean<AuthorityDTO> findOne(Long id) {
+	public ResultBean<AuthorityDTO> findOne(@PathVariable Long id) {
 		Optional<Authority> dataOp = authorityService.findById(id);
 		AssertUtil.assertTrue(dataOp.isPresent(), "查找不到相应的记录");
 		return new ResultBean<>(dataOp.get().asDTO());
