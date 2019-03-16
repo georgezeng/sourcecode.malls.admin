@@ -46,7 +46,7 @@ CREATE TABLE `authority` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`code` varchar(50) NOT NULL,
 	`name` varchar(255) NOT NULL,
-	`link` varchar(255),
+	`link` varchar(255) NOT NULL,
 	`method` varchar(255),
 	`description` varchar(50),
 	`create_by` varchar(50) NOT NULL,

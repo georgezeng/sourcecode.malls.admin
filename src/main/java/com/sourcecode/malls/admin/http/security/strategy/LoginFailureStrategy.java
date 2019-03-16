@@ -1,4 +1,4 @@
-package com.sourcecode.malls.admin.http.strategy;
+package com.sourcecode.malls.admin.http.security.strategy;
 
 import java.io.IOException;
 

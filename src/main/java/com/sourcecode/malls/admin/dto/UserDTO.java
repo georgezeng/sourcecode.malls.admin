@@ -14,6 +14,16 @@ public class UserDTO extends BaseUser {
 	private static final long serialVersionUID = 1L;
 
 	private List<RoleDTO> roles;
+	
+	private List<String> authorities;
+
+	public List<String> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(List<String> authorities) {
+		this.authorities = authorities;
+	}
 
 	public User asEntity() {
 		User entity = new User();

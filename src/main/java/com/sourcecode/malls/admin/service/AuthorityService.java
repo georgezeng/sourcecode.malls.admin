@@ -31,6 +31,7 @@ public class AuthorityService implements JpaService<Authority, Long> {
 			Authority auth = new Authority();
 			auth.setCode(superAdminProperties.getAuthority());
 			auth.setName("超级管理员权限");
+			auth.setLink("/**");
 			auth.addRole(role);
 			authorityRepository.save(auth);
 		}
@@ -52,6 +53,11 @@ public class AuthorityService implements JpaService<Authority, Long> {
 	@Transactional(readOnly = true)
 	public boolean isSuperAdmin(Authority authority) {
 		return authority.getCode().equals(superAdminProperties.getAuthority());
+	}
+
+	@Transactional(readOnly = true)
+	public Optional<Authority> findByLink(String link) {
+		return authorityRepository.findByLink(link);
 	}
 
 	@Override

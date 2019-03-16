@@ -12,4 +12,6 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
 	Optional<Authority> findByCode(String code);
 	
 	Page<Authority> findAllByCodeLikeOrNameLike(String code, String name, Pageable pageable);
+	
+	Optional<Authority> findByLink(String link);
 }

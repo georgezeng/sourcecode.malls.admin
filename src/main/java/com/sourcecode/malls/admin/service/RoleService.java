@@ -75,6 +75,7 @@ public class RoleService implements JpaService<Role, Long> {
 				Optional<User> userOp = userRepository.findById(user.getId());
 				if (userOp.isPresent()) {
 					role.addUser(userOp.get());
+					userOp.get().addRole(role);
 				}
 			}
 		}
@@ -84,6 +85,7 @@ public class RoleService implements JpaService<Role, Long> {
 				Optional<Authority> authOp = authorityService.findById(authority.getId());
 				if (authOp.isPresent()) {
 					role.addAuthority(authOp.get());
+					authOp.get().addRole(role);
 				}
 			}
 		}

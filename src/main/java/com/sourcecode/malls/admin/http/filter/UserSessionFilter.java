@@ -22,13 +22,13 @@ import com.sourcecode.malls.admin.domain.User;
 import com.sourcecode.malls.admin.exception.BusinessException;
 import com.sourcecode.malls.admin.http.session.UserContext;
 import com.sourcecode.malls.admin.properties.SessionAttributesProperties;
-import com.sourcecode.malls.admin.repository.jpa.impl.UserRepository;
+import com.sourcecode.malls.admin.service.UserService;
 
 @Component
 public class UserSessionFilter extends GenericFilterBean {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Autowired
 	private SessionAttributesProperties sessionProperties;
@@ -39,7 +39,7 @@ public class UserSessionFilter extends GenericFilterBean {
 			HttpSession session = ((HttpServletRequest) request).getSession();
 			Long userId = (Long) session.getAttribute(sessionProperties.getUserId());
 			if (userId != null) {
-				Optional<User> user = userRepository.findById(userId);
+				Optional<User> user = userService.findByIdWithAuthorities(userId);
 				if (user.isPresent()) {
 					UserContext.set(user.get());
 				}
@@ -48,7 +48,7 @@ public class UserSessionFilter extends GenericFilterBean {
 				if (RememberMeAuthenticationToken.class.isAssignableFrom(token.getClass())) {
 					RememberMeAuthenticationToken rToken = (RememberMeAuthenticationToken) token;
 					UserDetails details = (UserDetails) rToken.getPrincipal();
-					Optional<User> user = userRepository.findByUsername(details.getUsername());
+					Optional<User> user = userService.findByUsernameWithAuthorities(details.getUsername());
 					if (user.isPresent()) {
 						UserContext.set(user.get());
 						session.setAttribute(sessionProperties.getUserId(), user.get().getId());

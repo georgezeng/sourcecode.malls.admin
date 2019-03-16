@@ -91,4 +91,11 @@ public class UserController {
 		}
 		return new ResultBean<>();
 	}
+	
+	@RequestMapping(value = "/current/authorities")
+	public ResultBean<UserDTO> getCurrentUserAuthorities() {
+		Optional<User> dataOp = userService.findById(UserContext.get().getId());
+		AssertUtil.assertTrue(dataOp.isPresent(), "查找不到相应的记录");
+		return new ResultBean<>(dataOp.get().asDTO(true));
+	}
 }

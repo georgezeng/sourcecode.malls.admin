@@ -1,7 +1,9 @@
 package com.sourcecode.malls.admin.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -91,6 +93,11 @@ public class User extends BaseUser implements UserDetails {
 				dto.setRoles(roles.stream().map(role -> role.asDTO()).collect(Collectors.toList()));
 			}
 		}
+		List<String> auths = new ArrayList<>();
+		for (GrantedAuthority auth : getAuthorities()) {
+			auths.add(auth.getAuthority());
+		}
+		dto.setAuthorities(auths);
 		return dto;
 	}
 }

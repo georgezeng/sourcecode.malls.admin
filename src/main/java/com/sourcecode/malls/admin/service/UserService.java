@@ -82,6 +82,24 @@ public class UserService implements UserDetailsService, JpaService<User, Long> {
 	}
 
 	@Transactional(readOnly = true)
+	public Optional<User> findByIdWithAuthorities(Long userId) {
+		Optional<User> user = findById(userId);
+		if (user.isPresent()) {
+			user.get().getAuthorities();
+		}
+		return user;
+	}
+
+	@Transactional(readOnly = true)
+	public Optional<User> findByUsernameWithAuthorities(String username) {
+		Optional<User> user = userRepository.findByUsername(username);
+		if (user.isPresent()) {
+			user.get().getAuthorities();
+		}
+		return user;
+	}
+
+	@Transactional(readOnly = true)
 	public Page<User> findAll(QueryInfo<String> queryInfo) {
 		String nameOrCode = queryInfo.getData();
 		Page<User> pageReulst = null;
@@ -100,7 +118,7 @@ public class UserService implements UserDetailsService, JpaService<User, Long> {
 	}
 
 	public void relateToRoles(User user, List<RoleDTO> roles) {
-
+		save(user);
 		user.setRoles(new HashSet<>());
 		if (!CollectionUtils.isEmpty(roles)) {
 			for (RoleDTO roleDTO : roles) {
@@ -128,7 +146,6 @@ public class UserService implements UserDetailsService, JpaService<User, Long> {
 		}
 		AssertUtil.assertTrue(!CollectionUtils.isEmpty(user.getRoles()), "请关联至少一条角色记录");
 		roleRepository.saveAll(user.getRoles());
-		save(user);
 	}
 
 	@Override
