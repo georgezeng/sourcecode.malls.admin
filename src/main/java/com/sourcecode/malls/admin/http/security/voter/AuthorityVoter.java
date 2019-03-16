@@ -40,23 +40,24 @@ public class AuthorityVoter implements AccessDecisionVoter<FilterInvocation> {
 		}
 		user = userService.findById(user.getId()).orElse(null);
 		if (user == null || !userService.isSuperAdmin(user)) {
-			AuthorityConfigAttribute attr = null;
 			for (ConfigAttribute configAttr : attributes) {
 				if (AuthorityConfigAttribute.class.isAssignableFrom(configAttr.getClass())) {
-					attr = (AuthorityConfigAttribute) configAttr;
-					String method = attr.getAuth().getMethod();
-					if (method != null && !method.equalsIgnoreCase(fi.getHttpRequest().getMethod())) {
-						isGranted = false;
-						continue;
+					AuthorityConfigAttribute attr = (AuthorityConfigAttribute) configAttr;
+					if (attr.getAuth() != null) {
+						String method = attr.getAuth().getMethod();
+						if (method != null && !method.equalsIgnoreCase(fi.getHttpRequest().getMethod())) {
+							isGranted = false;
+							continue;
+						}
+						String authority = attr.getAttribute();
+						if (user == null || !user.isEnabled()
+								|| !user.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equalsIgnoreCase(authority))) {
+							isGranted = false;
+							continue;
+						}
+						isGranted = true;
+						break;
 					}
-					String authority = attr.getAttribute();
-					if (user == null || !user.isEnabled()
-							|| !user.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equalsIgnoreCase(authority))) {
-						isGranted = false;
-						continue;
-					}
-					isGranted = true;
-					break;
 				}
 			}
 		}
