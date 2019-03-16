@@ -119,8 +119,8 @@ public class UserService implements UserDetailsService, JpaService<User, Long> {
 
 	public void relateToRoles(User user, List<RoleDTO> roles) {
 		save(user);
-		user.setRoles(new HashSet<>());
 		if (!CollectionUtils.isEmpty(roles)) {
+			user.setRoles(new HashSet<>());
 			for (RoleDTO roleDTO : roles) {
 				Optional<Role> roleOp = roleRepository.findById(roleDTO.getId());
 				if (roleOp.isPresent()) {
@@ -140,12 +140,12 @@ public class UserService implements UserDetailsService, JpaService<User, Long> {
 					user.addRole(role);
 				}
 			}
+			if (isSuperAdmin(user)) {
+				AssertUtil.assertTrue(user.getRoles().size() == 1, "超级管理员不需要添加其他角色");
+			}
+			AssertUtil.assertTrue(!CollectionUtils.isEmpty(user.getRoles()), "请关联至少一条角色记录");
+			roleRepository.saveAll(user.getRoles());
 		}
-		if (isSuperAdmin(user)) {
-			AssertUtil.assertTrue(user.getRoles().size() == 1, "超级管理员不需要添加其他角色");
-		}
-		AssertUtil.assertTrue(!CollectionUtils.isEmpty(user.getRoles()), "请关联至少一条角色记录");
-		roleRepository.saveAll(user.getRoles());
 	}
 
 	@Override

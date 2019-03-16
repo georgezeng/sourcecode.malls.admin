@@ -64,7 +64,7 @@ public class UserController {
 		}
 		if (userService.isSuperAdmin(data)) {
 			AssertUtil.assertTrue(data.isEnabled(), "不能禁用超级管理员");
-		} else {
+		} else if(dto.getRoles() != null) {
 			AssertUtil.assertTrue(!dto.getRoles().stream().anyMatch(role -> roleService.isSuperAdmin(role)), "不能设置超级管理员");
 		}
 		userService.relateToRoles(data, dto.getRoles());
