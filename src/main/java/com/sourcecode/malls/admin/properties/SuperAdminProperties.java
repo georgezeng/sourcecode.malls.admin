@@ -11,6 +11,15 @@ public class SuperAdminProperties {
 	private String email;
 	private String code;
 	private String authority;
+	private String header;
+
+	public String getHeader() {
+		return header;
+	}
+
+	public void setHeader(String header) {
+		this.header = header;
+	}
 
 	public String getAuthority() {
 		return authority;
