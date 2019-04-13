@@ -15,9 +15,9 @@ CREATE TABLE `merchant_user` (
 	`create_time` datetime NOT NULL,
 	`update_time` datetime NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE `idx_merchant_User_username` (`username`),
-	INDEX `idx_merchant_User_email` (`email`),
-	INDEX `idx_merchant_User_mobile` (`mobile`)
+	UNIQUE `idx_Merchant_User_username` (`username`),
+	INDEX `idx_Merchant_User_email` (`email`),
+	INDEX `idx_Merchant_User_mobile` (`mobile`)
 );
 
 CREATE TABLE `merchant_role` (
@@ -30,8 +30,8 @@ CREATE TABLE `merchant_role` (
 	`create_time` datetime NOT NULL,
 	`update_time` datetime NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE `idx_merchant_Role_code` (`code`),
-	INDEX `idx_merchant_Role_name` (`name`)
+	UNIQUE `idx_Merchant_Role_code` (`code`),
+	INDEX `idx_Merchant_Role_name` (`name`)
 );
 
 CREATE TABLE `merchant_user_role` (
@@ -39,7 +39,7 @@ CREATE TABLE `merchant_user_role` (
 	`user_id` bigint(20) NOT NULL,
 	`role_id` bigint(20) NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE `idx_merchant_User_Role_user_id_role_id` (`user_id`, `role_id`)
+	UNIQUE `idx_Merchant_User_Role_user_id_role_id` (`user_id`, `role_id`)
 );
 
 CREATE TABLE `merchant_authority` (
@@ -54,8 +54,8 @@ CREATE TABLE `merchant_authority` (
 	`create_time` datetime NOT NULL,
 	`update_time` datetime NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE `idx_merchant_Authority_code` (`code`),
-	INDEX `idx_merchant_Authority_name` (`name`)
+	UNIQUE `idx_Merchant_Authority_code` (`code`),
+	INDEX `idx_Merchant_Authority_name` (`name`)
 );
 
 CREATE TABLE `merchant_role_authority` (
