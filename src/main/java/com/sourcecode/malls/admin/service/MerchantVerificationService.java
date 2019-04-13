@@ -21,6 +21,7 @@ import com.sourcecode.malls.admin.domain.merchant.Merchant;
 import com.sourcecode.malls.admin.domain.merchant.MerchantVerification;
 import com.sourcecode.malls.admin.dto.merchant.MerchantVerificationDTO;
 import com.sourcecode.malls.admin.dto.query.QueryInfo;
+import com.sourcecode.malls.admin.enums.VerificationStatus;
 import com.sourcecode.malls.admin.properties.SuperAdminProperties;
 import com.sourcecode.malls.admin.repository.jpa.impl.MerchantVerificationRepository;
 import com.sourcecode.malls.admin.service.base.JpaService;
@@ -56,7 +57,7 @@ public class MerchantVerificationService implements JpaService<MerchantVerificat
 							criteriaBuilder.like(root.get("name").as(String.class), like)));
 				}
 				if (!"all".equals(data.getStatusText())) {
-					predicate.add(criteriaBuilder.equal(root.get("status").as(String.class), data.getStatusText()));
+					predicate.add(criteriaBuilder.equal(root.get("status").as(VerificationStatus.class), VerificationStatus.valueOf(data.getStatusText())));
 				}
 				return query.where(predicate.toArray(new Predicate[] {})).getRestriction();
 			}
