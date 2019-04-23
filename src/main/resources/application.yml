@@ -6,4 +6,6 @@ spring:
   datasource:
     table:
       prefix: 
+
+user.type.name: user
     

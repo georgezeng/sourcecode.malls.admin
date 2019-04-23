@@ -79,4 +79,5 @@ public class MerchantController {
 		merchantService.save(data);
 		return new ResultBean<>();
 	}
+
 }
