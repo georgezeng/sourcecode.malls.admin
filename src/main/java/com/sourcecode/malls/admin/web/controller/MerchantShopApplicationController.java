@@ -83,7 +83,8 @@ public class MerchantShopApplicationController {
 		} else {
 			throw new BusinessException("上传失败，未知类型");
 		}
-		String filePath = "temp/merchant/shop/application/" + id + "/" + type + System.nanoTime() + ".png";
+		String extendName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		String filePath = "temp/merchant/shop/application/" + id + "/" + type + System.nanoTime() + extendName;
 		fileService.upload(false, filePath, file.getInputStream());
 		return new ResultBean<>(filePath);
 	}
