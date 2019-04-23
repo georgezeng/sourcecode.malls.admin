@@ -72,26 +72,4 @@ public class MerchantShopApplicationService implements JpaService<MerchantShopAp
 		return shopApplicationRepository;
 	}
 
-	public void createShop(MerchantShopApplication data) {
-		createH5(data);
-		if (data.isAndroidType()) {
-			data.setAndroidUrl(packageAndroid(data));
-		}
-		if (data.isIosType()) {
-			data.setIosUrl(packageIos(data));
-		}
-		shopApplicationRepository.save(data);
-	}
-
-	private void createH5(MerchantShopApplication data) {
-
-	}
-
-	private String packageAndroid(MerchantShopApplication data) {
-		return "/test";
-	}
-
-	private String packageIos(MerchantShopApplication data) {
-		return "/test";
-	}
 }
