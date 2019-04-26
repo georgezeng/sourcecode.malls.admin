@@ -125,7 +125,6 @@ public class MerchantShopApplicationController {
 		Optional<MerchantShopApplication> data = shopApplicationService.findById(id);
 		AssertUtil.assertTrue(data.isPresent(), "记录不存在");
 		AssertUtil.assertTrue(VerificationStatus.Passed.equals(data.get().getStatus()), "尚未审核通过，不能部署");
-		AssertUtil.assertTrue(!data.get().isDeployed(), "已经部署过，不能再次部署");
 		return data.get();
 	}
 }
