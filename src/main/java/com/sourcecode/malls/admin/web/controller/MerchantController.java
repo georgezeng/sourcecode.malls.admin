@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,29 +38,20 @@ public class MerchantController {
 		return new ResultBean<>(dtoResult);
 	}
 
-	@RequestMapping(value = "/disable")
-	public ResultBean<Void> disable(@RequestBody KeyDTO<Long> keys) {
+	@RequestMapping(value = "/updateStatus/params/{status}")
+	public ResultBean<Void> updateStatus(@RequestBody KeyDTO<Long> keys, @PathVariable Boolean status) {
 		AssertUtil.assertTrue(!CollectionUtils.isEmpty(keys.getIds()), "必须选择至少一条记录进行禁用");
 		for (Long id : keys.getIds()) {
 			Optional<Merchant> merchantOp = merchantService.findById(id);
 			if (merchantOp.isPresent()) {
 				Merchant merchant = merchantOp.get();
 				AssertUtil.assertTrue(!merchantService.isSuperAdmin(merchant), "不能禁用超级管理员");
-				merchant.setEnabled(false);
-				merchantService.save(merchant);
-			}
-		}
-		return new ResultBean<>();
-	}
-
-	@RequestMapping(value = "/enable")
-	public ResultBean<Void> enable(@RequestBody KeyDTO<Long> keys) {
-		AssertUtil.assertTrue(!CollectionUtils.isEmpty(keys.getIds()), "必须选择至少一条记录进行启用");
-		for (Long id : keys.getIds()) {
-			Optional<Merchant> merchantOp = merchantService.findById(id);
-			if (merchantOp.isPresent()) {
-				Merchant merchant = merchantOp.get();
-				merchant.setEnabled(true);
+				merchant.setEnabled(status);
+				if (!status && !CollectionUtils.isEmpty(merchant.getSubList())) {
+					for (Merchant sub : merchant.getSubList()) {
+						sub.setEnabled(status);
+					}
+				}
 				merchantService.save(merchant);
 			}
 		}

@@ -47,13 +47,14 @@ public class MerchantService implements JpaService<Merchant, Long> {
 			public Predicate toPredicate(Root<Merchant> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				List<Predicate> predicate = new ArrayList<>();
 				predicate.add(criteriaBuilder.notEqual(root.get("username").as(String.class), superAdminProperties.getUsername()));
+				predicate.add(criteriaBuilder.isNull(root.get("parent")));
 				if (!StringUtils.isEmpty(data.getSearchText())) {
 					String like = "%" + data.getSearchText() + "%";
 					predicate.add(criteriaBuilder.or(criteriaBuilder.like(root.get("username").as(String.class), like),
 							criteriaBuilder.like(root.get("email").as(String.class), like)));
 				}
-				if (!"all".equals(data.getStatus())) {
-					predicate.add(criteriaBuilder.equal(root.get("enabled").as(boolean.class), Boolean.valueOf(data.getStatus())));
+				if (!"all".equals(data.getStatusText())) {
+					predicate.add(criteriaBuilder.equal(root.get("enabled").as(boolean.class), Boolean.valueOf(data.getStatusText())));
 				}
 				return query.where(predicate.toArray(new Predicate[] {})).getRestriction();
 			}
