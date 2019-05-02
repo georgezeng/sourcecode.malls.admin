@@ -1,4 +1,4 @@
-package com.sourcecode.malls.admin.service;
+package com.sourcecode.malls.admin.service.impl.merchant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import com.sourcecode.malls.admin.domain.merchant.Merchant;
 import com.sourcecode.malls.admin.dto.merchant.MerchantDTO;
 import com.sourcecode.malls.admin.dto.query.QueryInfo;
 import com.sourcecode.malls.admin.properties.SuperAdminProperties;
-import com.sourcecode.malls.admin.repository.jpa.impl.MerchantRepository;
+import com.sourcecode.malls.admin.repository.jpa.impl.merchant.MerchantRepository;
 import com.sourcecode.malls.admin.service.base.JpaService;
 
 @Service

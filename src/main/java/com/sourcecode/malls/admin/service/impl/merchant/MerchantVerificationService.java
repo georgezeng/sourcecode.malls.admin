@@ -1,4 +1,4 @@
-package com.sourcecode.malls.admin.service;
+package com.sourcecode.malls.admin.service.impl.merchant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,28 +18,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.druid.util.StringUtils;
 import com.sourcecode.malls.admin.domain.merchant.Merchant;
-import com.sourcecode.malls.admin.domain.merchant.MerchantShopApplication;
-import com.sourcecode.malls.admin.dto.merchant.MerchantShopApplicationDTO;
+import com.sourcecode.malls.admin.domain.merchant.MerchantVerification;
+import com.sourcecode.malls.admin.dto.merchant.MerchantVerificationDTO;
 import com.sourcecode.malls.admin.dto.query.QueryInfo;
 import com.sourcecode.malls.admin.enums.VerificationStatus;
 import com.sourcecode.malls.admin.properties.SuperAdminProperties;
-import com.sourcecode.malls.admin.repository.jpa.impl.MerchantShopApplicationRepository;
+import com.sourcecode.malls.admin.repository.jpa.impl.merchant.MerchantVerificationRepository;
 import com.sourcecode.malls.admin.service.base.JpaService;
 
 @Service
 @Transactional
-public class MerchantShopApplicationService implements JpaService<MerchantShopApplication, Long> {
+public class MerchantVerificationService implements JpaService<MerchantVerification, Long> {
 	@Autowired
-	private MerchantShopApplicationRepository shopApplicationRepository;
+	private MerchantVerificationRepository merchantVerificationRepository;
 
 	@Autowired
 	private SuperAdminProperties superAdminProperties;
 
 	@Transactional(readOnly = true)
-	public Page<MerchantShopApplication> findAll(QueryInfo<MerchantShopApplicationDTO> queryInfo) {
-		MerchantShopApplicationDTO data = queryInfo.getData();
-		Page<MerchantShopApplication> pageReulst = null;
-		Specification<MerchantShopApplication> spec = new Specification<MerchantShopApplication>() {
+	public Page<MerchantVerification> findAll(QueryInfo<MerchantVerificationDTO> queryInfo) {
+		MerchantVerificationDTO data = queryInfo.getData();
+		Page<MerchantVerification> pageReulst = null;
+		Specification<MerchantVerification> spec = new Specification<MerchantVerification>() {
 
 			/**
 			 * 
@@ -47,9 +47,9 @@ public class MerchantShopApplicationService implements JpaService<MerchantShopAp
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Predicate toPredicate(Root<MerchantShopApplication> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+			public Predicate toPredicate(Root<MerchantVerification> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				List<Predicate> predicate = new ArrayList<>();
-				Join<MerchantShopApplication, Merchant> joinMerchant = root.join("merchant");
+				Join<MerchantVerification, Merchant> joinMerchant = root.join("merchant");
 				predicate.add(criteriaBuilder.notEqual(joinMerchant.get("username").as(String.class), superAdminProperties.getUsername()));
 				if (!StringUtils.isEmpty(data.getSearchText())) {
 					String like = "%" + data.getSearchText() + "%";
@@ -57,19 +57,17 @@ public class MerchantShopApplicationService implements JpaService<MerchantShopAp
 							criteriaBuilder.like(root.get("name").as(String.class), like)));
 				}
 				if (!"all".equals(data.getStatusText())) {
-					predicate.add(
-							criteriaBuilder.equal(root.get("status").as(VerificationStatus.class), VerificationStatus.valueOf(data.getStatusText())));
+					predicate.add(criteriaBuilder.equal(root.get("status").as(VerificationStatus.class), VerificationStatus.valueOf(data.getStatusText())));
 				}
 				return query.where(predicate.toArray(new Predicate[] {})).getRestriction();
 			}
 		};
-		pageReulst = shopApplicationRepository.findAll(spec, queryInfo.getPage().pageable());
+		pageReulst = merchantVerificationRepository.findAll(spec, queryInfo.getPage().pageable());
 		return pageReulst;
 	}
 
 	@Override
-	public JpaRepository<MerchantShopApplication, Long> getRepository() {
-		return shopApplicationRepository;
+	public JpaRepository<MerchantVerification, Long> getRepository() {
+		return merchantVerificationRepository;
 	}
-
 }
