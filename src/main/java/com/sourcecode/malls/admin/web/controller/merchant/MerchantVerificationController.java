@@ -20,20 +20,17 @@ import com.sourcecode.malls.admin.dto.query.PageResult;
 import com.sourcecode.malls.admin.dto.query.QueryInfo;
 import com.sourcecode.malls.admin.enums.VerificationStatus;
 import com.sourcecode.malls.admin.repository.jpa.impl.merchant.MerchantVerificationRepository;
-import com.sourcecode.malls.admin.service.FileOnlineSystemService;
 import com.sourcecode.malls.admin.service.impl.merchant.MerchantVerificationService;
 import com.sourcecode.malls.admin.util.AssertUtil;
-import com.sourcecode.malls.admin.web.controller.base.BaseFileOperationController;
+import com.sourcecode.malls.admin.web.controller.base.BaseController;
 
 @RestController
 @RequestMapping(path = "/merchant/verification")
-public class MerchantVerificationController implements BaseFileOperationController {
+public class MerchantVerificationController extends BaseController {
 	@Autowired
 	private MerchantVerificationService merchantVerificationService;
 	@Autowired
 	private MerchantVerificationRepository verificationRepository;
-	@Autowired
-	private FileOnlineSystemService fileService;
 
 	@RequestMapping(value = "/list")
 	public ResultBean<PageResult<MerchantVerificationDTO>> list(@RequestBody QueryInfo<MerchantVerificationDTO> queryInfo) {
@@ -71,6 +68,6 @@ public class MerchantVerificationController implements BaseFileOperationControll
 	public Resource loadPhoto(@PathVariable Long id, @RequestParam String filePath) {
 		Optional<MerchantVerification> dataOp = verificationRepository.findById(id);
 		AssertUtil.assertTrue(dataOp.isPresent(), ExceptionMessageConstant.NO_SUCH_RECORD);
-		return load(fileService, dataOp.get().getMerchant().getId(), filePath, "merchant/verification", false);
+		return load(dataOp.get().getMerchant().getId(), filePath, "merchant/verification", false);
 	}
 }

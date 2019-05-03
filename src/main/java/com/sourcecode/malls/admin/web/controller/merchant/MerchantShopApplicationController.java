@@ -21,18 +21,16 @@ import com.sourcecode.malls.admin.dto.merchant.MerchantShopApplicationDTO;
 import com.sourcecode.malls.admin.dto.query.PageResult;
 import com.sourcecode.malls.admin.dto.query.QueryInfo;
 import com.sourcecode.malls.admin.enums.VerificationStatus;
-import com.sourcecode.malls.admin.service.FileOnlineSystemService;
 import com.sourcecode.malls.admin.service.impl.merchant.MerchantShopApplicationService;
 import com.sourcecode.malls.admin.util.AssertUtil;
-import com.sourcecode.malls.admin.web.controller.base.BaseFileOperationController;
+import com.sourcecode.malls.admin.web.controller.base.BaseController;
 
 @RestController
 @RequestMapping(path = "/merchant/shop/application")
-public class MerchantShopApplicationController implements BaseFileOperationController {
+public class MerchantShopApplicationController extends BaseController {
 	@Autowired
 	private MerchantShopApplicationService shopApplicationService;
-	@Autowired
-	private FileOnlineSystemService fileService;
+
 	private String fileDir = "merchant/shop";
 
 	@RequestMapping(value = "/list")
@@ -70,7 +68,7 @@ public class MerchantShopApplicationController implements BaseFileOperationContr
 	@RequestMapping(value = "/file/upload/params/{id}")
 	public ResultBean<String> upload(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws Exception {
 		MerchantShopApplication data = checkIsPassed(id);
-		return upload(fileService, file, fileDir, id, data.getMerchant().getId(), false);
+		return upload(file, fileDir, id, data.getMerchant().getId(), false);
 	}
 
 	@RequestMapping(value = "/deploy")
@@ -94,7 +92,7 @@ public class MerchantShopApplicationController implements BaseFileOperationContr
 			data.setIosUrl(newPath);
 		}
 		shopApplicationService.save(data);
-		transfer(fileService, true, tmpPaths, newPaths);
+		transfer(true, tmpPaths, newPaths);
 		return new ResultBean<>();
 	}
 
