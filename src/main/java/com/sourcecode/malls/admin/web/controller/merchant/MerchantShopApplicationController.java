@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.sourcecode.malls.admin.constants.ExceptionMessageConstant;
 import com.sourcecode.malls.admin.domain.merchant.MerchantShopApplication;
@@ -67,12 +66,6 @@ public class MerchantShopApplicationController extends BaseController {
 		return new ResultBean<>();
 	}
 
-	@RequestMapping(value = "/file/upload/params/{id}")
-	public ResultBean<String> upload(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws Exception {
-		MerchantShopApplication data = checkIsPassed(id);
-		return upload(file, fileDir, id, data.getMerchant().getId(), false);
-	}
-
 	@RequestMapping(value = "/deploy")
 	public ResultBean<Void> deploy(@RequestBody MerchantShopApplicationDTO dto) {
 		MerchantShopApplication data = checkIsPassed(dto.getId());
@@ -109,6 +102,6 @@ public class MerchantShopApplicationController extends BaseController {
 	public Resource loadPhoto(@PathVariable Long id, @RequestParam String filePath) {
 		Optional<MerchantShopApplication> dataOp = shopApplicationService.findById(id);
 		AssertUtil.assertTrue(dataOp.isPresent(), ExceptionMessageConstant.NO_SUCH_RECORD);
-		return load(dataOp.get().getMerchant().getId(), filePath, fileDir, false);
+		return load(dataOp.get().getMerchant().getId(), filePath, fileDir, true);
 	}
 }
