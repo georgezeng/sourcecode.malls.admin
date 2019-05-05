@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sourcecode.malls.admin.constants.ExceptionMessageConstant;
 import com.sourcecode.malls.admin.domain.merchant.MerchantShopApplication;
@@ -64,6 +65,12 @@ public class MerchantShopApplicationController extends BaseController {
 		}
 		shopApplicationService.save(data);
 		return new ResultBean<>();
+	}
+
+	@RequestMapping(value = "/file/upload/params/{id}")
+	public ResultBean<String> upload(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws Exception {
+		MerchantShopApplication data = checkIsPassed(id);
+		return upload(file, fileDir, id, data.getMerchant().getId(), false);
 	}
 
 	@RequestMapping(value = "/deploy")
