@@ -30,11 +30,8 @@ public class MerchantController {
 	@RequestMapping(value = "/list")
 	public ResultBean<PageResult<MerchantDTO>> list(@RequestBody QueryInfo<MerchantDTO> queryInfo) {
 		Page<Merchant> pageResult = merchantService.findAll(queryInfo);
-		PageResult<MerchantDTO> dtoResult = new PageResult<>();
-		if (pageResult.hasContent()) {
-			dtoResult = new PageResult<>(pageResult.getContent().stream().map(data -> data.asDTO()).collect(Collectors.toList()),
-					pageResult.getTotalElements());
-		}
+		PageResult<MerchantDTO> dtoResult = new PageResult<>(pageResult.getContent().stream().map(data -> data.asDTO()).collect(Collectors.toList()),
+				pageResult.getTotalElements());
 		return new ResultBean<>(dtoResult);
 	}
 
