@@ -1,4 +1,4 @@
-package com.sourcecode.malls.admin.service.impl.merchant;
+package com.sourcecode.malls.service.impl.merchant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.druid.util.StringUtils;
-import com.sourcecode.malls.admin.domain.merchant.Merchant;
-import com.sourcecode.malls.admin.dto.merchant.MerchantDTO;
-import com.sourcecode.malls.admin.dto.query.QueryInfo;
-import com.sourcecode.malls.admin.properties.SuperAdminProperties;
-import com.sourcecode.malls.admin.repository.jpa.impl.merchant.MerchantRepository;
-import com.sourcecode.malls.admin.service.base.JpaService;
+import com.sourcecode.malls.domain.merchant.Merchant;
+import com.sourcecode.malls.dto.merchant.MerchantDTO;
+import com.sourcecode.malls.dto.query.QueryInfo;
+import com.sourcecode.malls.properties.SuperAdminProperties;
+import com.sourcecode.malls.repository.jpa.impl.merchant.MerchantRepository;
+import com.sourcecode.malls.service.base.JpaService;
 
 @Service
 @Transactional

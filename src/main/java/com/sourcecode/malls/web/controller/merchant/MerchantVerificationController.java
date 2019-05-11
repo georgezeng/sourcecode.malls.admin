@@ -1,4 +1,4 @@
-package com.sourcecode.malls.admin.web.controller.merchant;
+package com.sourcecode.malls.web.controller.merchant;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sourcecode.malls.admin.constants.ExceptionMessageConstant;
-import com.sourcecode.malls.admin.domain.merchant.MerchantVerification;
-import com.sourcecode.malls.admin.dto.base.ResultBean;
-import com.sourcecode.malls.admin.dto.merchant.MerchantVerificationDTO;
-import com.sourcecode.malls.admin.dto.query.PageResult;
-import com.sourcecode.malls.admin.dto.query.QueryInfo;
-import com.sourcecode.malls.admin.enums.VerificationStatus;
-import com.sourcecode.malls.admin.repository.jpa.impl.merchant.MerchantVerificationRepository;
-import com.sourcecode.malls.admin.service.impl.merchant.MerchantVerificationService;
-import com.sourcecode.malls.admin.util.AssertUtil;
-import com.sourcecode.malls.admin.web.controller.base.BaseController;
+import com.sourcecode.malls.constants.ExceptionMessageConstant;
+import com.sourcecode.malls.domain.merchant.MerchantVerification;
+import com.sourcecode.malls.dto.base.ResultBean;
+import com.sourcecode.malls.dto.merchant.MerchantVerificationDTO;
+import com.sourcecode.malls.dto.query.PageResult;
+import com.sourcecode.malls.dto.query.QueryInfo;
+import com.sourcecode.malls.enums.VerificationStatus;
+import com.sourcecode.malls.repository.jpa.impl.merchant.MerchantVerificationRepository;
+import com.sourcecode.malls.service.impl.merchant.MerchantVerificationService;
+import com.sourcecode.malls.util.AssertUtil;
+import com.sourcecode.malls.web.controller.base.BaseController;
 
 @RestController
 @RequestMapping(path = "/merchant/verification")

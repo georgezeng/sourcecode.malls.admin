@@ -1,4 +1,4 @@
-package com.sourcecode.malls.admin.service.impl.merchant;
+package com.sourcecode.malls.service.impl.merchant;
 
 import java.util.Optional;
 
@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sourcecode.malls.admin.domain.system.setting.Authority;
-import com.sourcecode.malls.admin.repository.jpa.impl.system.AuthorityRepository;
-import com.sourcecode.malls.admin.web.controller.AuthorityDefinitions;
+import com.sourcecode.malls.domain.system.setting.Authority;
+import com.sourcecode.malls.repository.jpa.impl.system.AuthorityRepository;
+import com.sourcecode.malls.web.controller.AuthorityDefinitions;
 
 @Service("MallsAuthorityService")
 @Transactional

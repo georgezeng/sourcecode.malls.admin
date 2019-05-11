@@ -1,4 +1,4 @@
-package com.sourcecode.malls.admin.web.controller;
+package com.sourcecode.malls.web.controller;
 
 public enum AuthorityDefinitions {
 	MERCHANT_USER_LIST_PAGE("商家管理-列表页面", "AUTH_MERCHANT_USER_LIST_PAGE", "/Merchant/User/List/Page", "GET"),

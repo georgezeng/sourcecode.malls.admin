@@ -1,4 +1,4 @@
-package com.sourcecode.malls.admin;
+package com.sourcecode.malls;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.sourcecode.malls.admin.web.controller.merchant;
+package com.sourcecode.malls.web.controller.merchant;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sourcecode.malls.admin.constants.ExceptionMessageConstant;
-import com.sourcecode.malls.admin.domain.merchant.Merchant;
-import com.sourcecode.malls.admin.dto.base.KeyDTO;
-import com.sourcecode.malls.admin.dto.base.ResultBean;
-import com.sourcecode.malls.admin.dto.merchant.MerchantDTO;
-import com.sourcecode.malls.admin.dto.query.PageResult;
-import com.sourcecode.malls.admin.dto.query.QueryInfo;
-import com.sourcecode.malls.admin.service.impl.merchant.MerchantService;
-import com.sourcecode.malls.admin.util.AssertUtil;
+import com.sourcecode.malls.constants.ExceptionMessageConstant;
+import com.sourcecode.malls.domain.merchant.Merchant;
+import com.sourcecode.malls.dto.base.KeyDTO;
+import com.sourcecode.malls.dto.base.ResultBean;
+import com.sourcecode.malls.dto.merchant.MerchantDTO;
+import com.sourcecode.malls.dto.query.PageResult;
+import com.sourcecode.malls.dto.query.QueryInfo;
+import com.sourcecode.malls.service.impl.merchant.MerchantService;
+import com.sourcecode.malls.util.AssertUtil;
 
 @RestController
 @RequestMapping(value = "/merchant/user")
