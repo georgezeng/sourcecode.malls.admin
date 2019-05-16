@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sourcecode.malls.domain.system.setting.Authority;
+import com.sourcecode.malls.domain.system.Authority;
 import com.sourcecode.malls.repository.jpa.impl.system.AuthorityRepository;
 import com.sourcecode.malls.web.controller.AuthorityDefinitions;
 
