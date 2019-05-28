@@ -93,6 +93,7 @@ public class MerchantShopApplicationController extends BaseController {
 			tmpPaths.add(tmpPath);
 			data.setIosUrl(newPath);
 		}
+		data.setDomain(dto.getDomain());
 		shopApplicationService.save(data);
 		transfer(true, tmpPaths, newPaths);
 		return new ResultBean<>();
