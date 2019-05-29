@@ -49,16 +49,18 @@ public class MerchantShopApplicationService implements JpaService<MerchantShopAp
 			@Override
 			public Predicate toPredicate(Root<MerchantShopApplication> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				List<Predicate> predicate = new ArrayList<>();
-				Join<MerchantShopApplication, Merchant> joinMerchant = root.join("merchant");
-				predicate.add(criteriaBuilder.notEqual(joinMerchant.get("username").as(String.class), superAdminProperties.getUsername()));
-				if (!StringUtils.isEmpty(data.getSearchText())) {
-					String like = "%" + data.getSearchText() + "%";
-					predicate.add(criteriaBuilder.or(criteriaBuilder.like(joinMerchant.get("username").as(String.class), like),
-							criteriaBuilder.like(root.get("name").as(String.class), like)));
-				}
-				if (!"all".equals(data.getStatusText())) {
-					predicate.add(
-							criteriaBuilder.equal(root.get("status").as(VerificationStatus.class), VerificationStatus.valueOf(data.getStatusText())));
+				if (data != null) {
+					Join<MerchantShopApplication, Merchant> joinMerchant = root.join("merchant");
+					predicate.add(criteriaBuilder.notEqual(joinMerchant.get("username").as(String.class), superAdminProperties.getUsername()));
+					if (!StringUtils.isEmpty(data.getSearchText())) {
+						String like = "%" + data.getSearchText() + "%";
+						predicate.add(criteriaBuilder.or(criteriaBuilder.like(joinMerchant.get("username").as(String.class), like),
+								criteriaBuilder.like(root.get("name").as(String.class), like)));
+					}
+					if (!"all".equals(data.getStatusText())) {
+						predicate.add(criteriaBuilder.equal(root.get("status").as(VerificationStatus.class),
+								VerificationStatus.valueOf(data.getStatusText())));
+					}
 				}
 				return query.where(predicate.toArray(new Predicate[] {})).getRestriction();
 			}
