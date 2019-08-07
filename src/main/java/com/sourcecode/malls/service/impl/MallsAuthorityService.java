@@ -10,9 +10,9 @@ import com.sourcecode.malls.domain.system.Authority;
 import com.sourcecode.malls.repository.jpa.impl.system.AuthorityRepository;
 import com.sourcecode.malls.web.controller.AuthorityDefinitions;
 
-@Service("MallsAuthorityService")
+@Service
 @Transactional
-public class AuthorityService {
+public class MallsAuthorityService {
 
 	@Autowired
 	private AuthorityRepository authRepository;
