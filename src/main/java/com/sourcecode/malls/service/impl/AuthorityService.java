@@ -1,4 +1,4 @@
-package com.sourcecode.malls.service.impl.merchant;
+package com.sourcecode.malls.service.impl;
 
 import java.util.Optional;
 
