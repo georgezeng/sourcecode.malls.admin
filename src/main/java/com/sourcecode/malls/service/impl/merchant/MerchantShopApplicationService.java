@@ -38,7 +38,7 @@ public class MerchantShopApplicationService implements JpaService<MerchantShopAp
 	@Transactional(readOnly = true)
 	public Page<MerchantShopApplication> findAll(QueryInfo<MerchantShopApplicationDTO> queryInfo) {
 		MerchantShopApplicationDTO data = queryInfo.getData();
-		Page<MerchantShopApplication> pageReulst = null;
+		Page<MerchantShopApplication> pageResult = null;
 		Specification<MerchantShopApplication> spec = new Specification<MerchantShopApplication>() {
 
 			/**
@@ -65,8 +65,8 @@ public class MerchantShopApplicationService implements JpaService<MerchantShopAp
 				return query.where(predicate.toArray(new Predicate[] {})).getRestriction();
 			}
 		};
-		pageReulst = shopApplicationRepository.findAll(spec, queryInfo.getPage().pageable());
-		return pageReulst;
+		pageResult = shopApplicationRepository.findAll(spec, queryInfo.getPage().pageable());
+		return pageResult;
 	}
 
 	@Override

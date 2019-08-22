@@ -38,7 +38,7 @@ public class MerchantVerificationService implements JpaService<MerchantVerificat
 	@Transactional(readOnly = true)
 	public Page<MerchantVerification> findAll(QueryInfo<MerchantVerificationDTO> queryInfo) {
 		MerchantVerificationDTO data = queryInfo.getData();
-		Page<MerchantVerification> pageReulst = null;
+		Page<MerchantVerification> pageResult = null;
 		Specification<MerchantVerification> spec = new Specification<MerchantVerification>() {
 
 			/**
@@ -65,8 +65,8 @@ public class MerchantVerificationService implements JpaService<MerchantVerificat
 				return query.where(predicate.toArray(new Predicate[] {})).getRestriction();
 			}
 		};
-		pageReulst = merchantVerificationRepository.findAll(spec, queryInfo.getPage().pageable());
-		return pageReulst;
+		pageResult = merchantVerificationRepository.findAll(spec, queryInfo.getPage().pageable());
+		return pageResult;
 	}
 
 	@Override

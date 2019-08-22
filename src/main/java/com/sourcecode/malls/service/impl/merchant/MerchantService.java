@@ -35,7 +35,7 @@ public class MerchantService implements JpaService<Merchant, Long> {
 	@Transactional(readOnly = true)
 	public Page<Merchant> findAll(QueryInfo<MerchantDTO> queryInfo) {
 		MerchantDTO data = queryInfo.getData();
-		Page<Merchant> pageReulst = null;
+		Page<Merchant> pageResult = null;
 		Specification<Merchant> spec = new Specification<Merchant>() {
 
 			/**
@@ -61,8 +61,8 @@ public class MerchantService implements JpaService<Merchant, Long> {
 				return query.where(predicate.toArray(new Predicate[] {})).getRestriction();
 			}
 		};
-		pageReulst = merchantRepository.findAll(spec, queryInfo.getPage().pageable());
-		return pageReulst;
+		pageResult = merchantRepository.findAll(spec, queryInfo.getPage().pageable());
+		return pageResult;
 	}
 
 	@Transactional(readOnly = true)
