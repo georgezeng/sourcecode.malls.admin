@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sourcecode.malls.constants.ExceptionMessageConstant;
+import com.sourcecode.malls.context.UserContext;
 import com.sourcecode.malls.domain.merchant.MerchantShopApplication;
 import com.sourcecode.malls.dto.base.ResultBean;
 import com.sourcecode.malls.dto.merchant.MerchantShopApplicationDTO;
 import com.sourcecode.malls.dto.query.PageResult;
 import com.sourcecode.malls.dto.query.QueryInfo;
 import com.sourcecode.malls.enums.VerificationStatus;
+import com.sourcecode.malls.service.impl.CacheEvictService;
 import com.sourcecode.malls.service.impl.merchant.MerchantShopApplicationService;
 import com.sourcecode.malls.util.AssertUtil;
 import com.sourcecode.malls.web.controller.base.BaseController;
@@ -32,14 +34,18 @@ import com.sourcecode.malls.web.controller.base.BaseController;
 public class MerchantShopApplicationController extends BaseController {
 	@Autowired
 	private MerchantShopApplicationService shopApplicationService;
+	@Autowired
+	private CacheEvictService cacheEvictService;
 
 	private String fileDir = "merchant/shop";
 
 	@RequestMapping(value = "/list")
-	public ResultBean<PageResult<MerchantShopApplicationDTO>> list(@RequestBody QueryInfo<MerchantShopApplicationDTO> queryInfo) {
+	public ResultBean<PageResult<MerchantShopApplicationDTO>> list(
+			@RequestBody QueryInfo<MerchantShopApplicationDTO> queryInfo) {
 		Page<MerchantShopApplication> pageResult = shopApplicationService.findAll(queryInfo);
 		PageResult<MerchantShopApplicationDTO> dtoResult = new PageResult<>(
-				pageResult.getContent().stream().map(data -> data.asDTO()).collect(Collectors.toList()), pageResult.getTotalElements());
+				pageResult.getContent().stream().map(data -> data.asDTO()).collect(Collectors.toList()),
+				pageResult.getTotalElements());
 		return new ResultBean<>(dtoResult);
 	}
 
@@ -56,14 +62,18 @@ public class MerchantShopApplicationController extends BaseController {
 		Optional<MerchantShopApplication> dataOp = shopApplicationService.findById(dto.getId());
 		AssertUtil.assertTrue(dataOp.isPresent(), ExceptionMessageConstant.NO_SUCH_RECORD);
 		MerchantShopApplication data = dataOp.get();
-		AssertUtil.assertTrue(!(VerificationStatus.UnPassed.equals(data.getStatus()) || VerificationStatus.Passed.equals(data.getStatus())),
-				ExceptionMessageConstant.HAS_VERIFIED);
+		AssertUtil
+				.assertTrue(
+						!(VerificationStatus.UnPassed.equals(data.getStatus())
+								|| VerificationStatus.Passed.equals(data.getStatus())),
+						ExceptionMessageConstant.HAS_VERIFIED);
 		data.setStatus(dto.getStatus());
 		if (VerificationStatus.UnPassed.equals(dto.getStatus())) {
 			AssertUtil.assertNotEmpty(dto.getReason(), ExceptionMessageConstant.FAILED_REASON_CAN_NOT_BE_EMPTY);
 			data.setReason(dto.getReason());
 		}
 		shopApplicationService.save(data);
+		cacheEvictService.clearMerchantShopName(UserContext.get().getId());
 		return new ResultBean<>();
 	}
 
@@ -106,7 +116,8 @@ public class MerchantShopApplicationController extends BaseController {
 		return data.get();
 	}
 
-	@RequestMapping(value = "/file/load/params/{id}", produces = { MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE })
+	@RequestMapping(value = "/file/load/params/{id}", produces = { MediaType.IMAGE_PNG_VALUE,
+			MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public Resource loadPhoto(@PathVariable Long id, @RequestParam String filePath) {
 		Optional<MerchantShopApplication> dataOp = shopApplicationService.findById(id);
 		AssertUtil.assertTrue(dataOp.isPresent(), ExceptionMessageConstant.NO_SUCH_RECORD);
