@@ -17,14 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sourcecode.malls.constants.ExceptionMessageConstant;
-import com.sourcecode.malls.context.UserContext;
 import com.sourcecode.malls.domain.merchant.MerchantShopApplication;
 import com.sourcecode.malls.dto.base.ResultBean;
 import com.sourcecode.malls.dto.merchant.MerchantShopApplicationDTO;
 import com.sourcecode.malls.dto.query.PageResult;
 import com.sourcecode.malls.dto.query.QueryInfo;
 import com.sourcecode.malls.enums.VerificationStatus;
-import com.sourcecode.malls.service.impl.CacheEvictService;
 import com.sourcecode.malls.service.impl.merchant.MerchantShopApplicationService;
 import com.sourcecode.malls.util.AssertUtil;
 import com.sourcecode.malls.web.controller.base.BaseController;
@@ -34,8 +32,6 @@ import com.sourcecode.malls.web.controller.base.BaseController;
 public class MerchantShopApplicationController extends BaseController {
 	@Autowired
 	private MerchantShopApplicationService shopApplicationService;
-	@Autowired
-	private CacheEvictService cacheEvictService;
 
 	private String fileDir = "merchant/shop";
 
@@ -73,7 +69,6 @@ public class MerchantShopApplicationController extends BaseController {
 			data.setReason(dto.getReason());
 		}
 		shopApplicationService.save(data);
-		cacheEvictService.clearMerchantShopName(UserContext.get().getId());
 		return new ResultBean<>();
 	}
 
