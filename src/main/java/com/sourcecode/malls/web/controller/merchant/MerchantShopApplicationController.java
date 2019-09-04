@@ -16,13 +16,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sourcecode.malls.constant.SystemConstant;
 import com.sourcecode.malls.constants.ExceptionMessageConstant;
+import com.sourcecode.malls.domain.merchant.MerchantRole;
 import com.sourcecode.malls.domain.merchant.MerchantShopApplication;
+import com.sourcecode.malls.domain.merchant.MerchantUser;
 import com.sourcecode.malls.dto.base.ResultBean;
 import com.sourcecode.malls.dto.merchant.MerchantShopApplicationDTO;
 import com.sourcecode.malls.dto.query.PageResult;
 import com.sourcecode.malls.dto.query.QueryInfo;
 import com.sourcecode.malls.enums.VerificationStatus;
+import com.sourcecode.malls.repository.jpa.impl.merchant.MerchantRoleRepository;
+import com.sourcecode.malls.repository.jpa.impl.merchant.MerchantUserRepository;
 import com.sourcecode.malls.service.impl.merchant.MerchantShopApplicationService;
 import com.sourcecode.malls.util.AssertUtil;
 import com.sourcecode.malls.web.controller.base.BaseController;
@@ -32,6 +37,12 @@ import com.sourcecode.malls.web.controller.base.BaseController;
 public class MerchantShopApplicationController extends BaseController {
 	@Autowired
 	private MerchantShopApplicationService shopApplicationService;
+
+	@Autowired
+	private MerchantRoleRepository merchantRoleRepository;
+
+	@Autowired
+	private MerchantUserRepository merchantUserRepository;
 
 	private String fileDir = "merchant/shop";
 
@@ -67,6 +78,13 @@ public class MerchantShopApplicationController extends BaseController {
 		if (VerificationStatus.UnPassed.equals(dto.getStatus())) {
 			AssertUtil.assertNotEmpty(dto.getReason(), ExceptionMessageConstant.FAILED_REASON_CAN_NOT_BE_EMPTY);
 			data.setReason(dto.getReason());
+		} else {
+			Optional<MerchantRole> role = merchantRoleRepository.findByCode(SystemConstant.ROLE_MERCHANT_USER_CODE);
+			AssertUtil.assertTrue(role.isPresent(), "商家角色不存在");
+			Optional<MerchantUser> user = merchantUserRepository.findById(data.getMerchant().getId());
+			AssertUtil.assertTrue(user.isPresent(), "商家不存在");
+			role.get().addUser(user.get());
+			merchantRoleRepository.save(role.get());
 		}
 		shopApplicationService.save(data);
 		return new ResultBean<>();
